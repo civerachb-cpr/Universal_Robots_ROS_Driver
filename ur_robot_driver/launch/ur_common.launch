@@ -24,7 +24,7 @@
   <arg name="external_description" default="false" doc="If true, use the robot_description published by an external launch file. Used e.g. if the arm is mounted to another robot platform" />
 
   <!-- robot model -->
-  <group if="$(arg external_description)">
+  <group unless="$(arg external_description)">
     <include file="$(arg robot_description_file)">
       <arg name="limited" value="$(arg limited)"/>
       <arg name="kinematics_config" value="$(arg kinematics_config)"/>
