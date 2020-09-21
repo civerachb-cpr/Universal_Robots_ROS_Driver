@@ -21,15 +21,18 @@
   <arg name="robot_description_file" doc="Robot description launch file."/>
   <arg name="limited" default="false" doc="Use the description in limited mode (Every axis rotates from -PI to PI)"/>
   <arg name="headless_mode" default="false" doc="Automatically send URScript to robot to execute. On e-Series this does require the robot to be in 'remote-control' mode. With this, the URCap is not needed on the robot."/>
+  <arg name="external_description" default="false" doc="If true, use the robot_description published by an external launch file. Used e.g. if the arm is mounted to another robot platform" />
 
   <!-- robot model -->
-  <include file="$(arg robot_description_file)">
-    <arg name="limited" value="$(arg limited)"/>
-    <arg name="kinematics_config" value="$(arg kinematics_config)"/>
-  </include>
+  <group if="$(arg external_description)">
+    <include file="$(arg robot_description_file)">
+      <arg name="limited" value="$(arg limited)"/>
+      <arg name="kinematics_config" value="$(arg kinematics_config)"/>
+    </include>
 
-  <!-- Convert joint states to /tf tranforms -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    <!-- Convert joint states to /tf tranforms -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  </group>
 
   <include file="$(find ur_robot_driver)/launch/ur_control.launch">
     <arg name="debug" value="$(arg debug)"/>
